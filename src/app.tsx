@@ -3,8 +3,8 @@ import { Question } from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import type { RunTimeLayoutConfig, RequestConfig } from '@umijs/max';
+import {history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { errorConfig } from './requestErrorConfig';
@@ -125,11 +125,22 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
+
+/**
+ * 为了本地开发遍历，直接重定向端口
+ */
+let baseURL: string;
+if (window.location.hostname === 'localhost') {
+  baseURL = 'http://localhost:7001/';
+} else {
+  baseURL = `https://${window.location.hostname}/`;
+}
 /**
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request = {
+export const request: RequestConfig = {
+  baseURL: baseURL,
   ...errorConfig,
 };

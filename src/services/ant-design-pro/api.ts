@@ -22,13 +22,23 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/login/account', {
+  return request<API.LoginResult>('/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
     ...(options || {}),
+  });
+}
+
+export async function register(body: API.RegisterParams) {
+  return request<API.RegisterResult>('/user/register', {
+    method: 'POST',
+    headers:{
+      'Content-Type': 'application/json',
+    },
+    data: body,
   });
 }
 

@@ -17,7 +17,7 @@ import {
 } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
+import {Alert, Button, message, Tabs, Row, Col} from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
@@ -43,22 +43,22 @@ const ActionIcons = () => {
     </>
   );
 };
-const Lang = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-  return;
-};
+// const Lang = () => {
+//   const langClassName = useEmotionCss(({ token }) => {
+//     return {
+//       width: 42,
+//       height: 42,
+//       lineHeight: '42px',
+//       position: 'fixed',
+//       right: 16,
+//       borderRadius: token.borderRadius,
+//       ':hover': {
+//         backgroundColor: token.colorBgTextHover,
+//       },
+//     };
+//   });
+//   return;
+// };
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {
@@ -101,28 +101,44 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // 登录
-      const msg = await login({
-        ...values,
-        type,
-      });
-      if (msg.status === 'ok') {
+      // 判断是登录还是注册
+      const result = await login(values);
+      if (result.success) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+        // TODO: 未实现
+        // await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-      console.log(msg);
+      console.log(result.message);
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      setUserLoginState(result);
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
+  const SubmitterButton: React.FC = () => {
+    let btnText: string = '';
+    if (type === 'account') {
+      btnText = '登 录';
+    } else if (type === 'register') {
+      btnText = '注 册';
+    }
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        // height: "100vh"
+      }}>
+        <Button type="primary" size="large" block htmlType="submit">{btnText}</Button>
+      </div>
+    );
+  }
   const { status, type: loginType } = userLoginState;
   return (
     <div className={containerClassName}>
@@ -131,7 +147,7 @@ const Login: React.FC = () => {
           {'登录'}- {Settings.title}
         </title>
       </Helmet>
-      <Lang />
+      {/*<Lang />*/}
       <div
         style={{
           flex: '1',
@@ -149,7 +165,12 @@ const Login: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
-          actions={['其他登录方式 :', <ActionIcons key="icons" />]}
+          // actions={['其他登录方式 :', <ActionIcons key="icons" />]}
+          submitter={{
+            render: () => {
+              return <SubmitterButton />;
+            }
+          }}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -161,11 +182,11 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账户密码登录',
+                label: '登录',
               },
               {
-                key: 'mobile',
-                label: '手机号登录',
+                key: 'register',
+                label: '注册',
               },
             ]}
           />
@@ -203,80 +224,72 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+              <div
+                style={{
+                  marginBottom: 42,
+                }}
+              >
+                <Row justify="end">
+                  <a
+                    style={{
+                      float: 'right',
+                    }}
+                    onClick={() => {
+                      message.info("还未实现");
+                    }}
+                  >
+                    忘记密码 ?
+                  </a>
+                </Row>
+              </div>
             </>
           )}
-
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          {type === 'mobile' && (
+          {type === 'register' && (
             <>
               <ProFormText
                 fieldProps={{
                   size: 'large',
-                  prefix: <MobileOutlined />,
+                  prefix: <UserOutlined />,
                 }}
-                name="mobile"
-                placeholder={'请输入手机号！'}
+                name="username"
+                placeholder={'用户名！'}
                 rules={[
                   {
                     required: true,
-                    message: '手机号是必填项！',
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: '不合法的手机号！',
-                  },
+                    message: '用户名是必填项！',
+                  }
                 ]}
               />
-              <ProFormCaptcha
+              <ProFormText.Password
+                name="password"
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={'请输入验证码！'}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${'秒后重新获取'}`;
-                  }
-                  return '获取验证码';
-                }}
-                name="captcha"
+                placeholder={'请输入密码！'}
                 rules={[
                   {
                     required: true,
-                    message: '验证码是必填项！',
+                    message: '密码是必填项！',
                   },
                 ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (!result) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
+              />
+              <ProFormText.Password
+                name="checkPasswork"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
                 }}
+                placeholder={'请再次输入密码！'}
+                rules={[
+                  {
+                    required: true,
+                    message: '确认密码是必填项！',
+                  },
+                ]}
               />
             </>
           )}
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码 ?
-            </a>
-          </div>
         </LoginForm>
       </div>
       <Footer />
