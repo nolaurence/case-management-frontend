@@ -35,6 +35,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
+
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -130,10 +131,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 为了本地开发遍历，直接重定向端口
  */
 let baseURL: string;
+let allowCROSCredentials = false;
 if (window.location.hostname === 'localhost') {
   baseURL = 'http://localhost:7001/';
+  allowCROSCredentials = true;
 } else {
   baseURL = `https://${window.location.hostname}/`;
+  allowCROSCredentials = false;
 }
 /**
  * @name request 配置，可以配置错误处理
@@ -142,5 +146,6 @@ if (window.location.hostname === 'localhost') {
  */
 export const request: RequestConfig = {
   baseURL: baseURL,
+  withCredentials: allowCROSCredentials,
   ...errorConfig,
 };

@@ -1,6 +1,7 @@
 export default [
   { path: '/user', layout: false, routes: [{ path: '/user/login', component: './User/Login' }] },
   { path: '/welcome', icon: 'smile', component: './Welcome' },
+  { path: '/user_manage', icon: 'user', component: './User/Manage', name: '用户管理' },
   {
     path: '/admin',
     icon: 'crown',
