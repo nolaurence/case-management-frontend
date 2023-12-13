@@ -5,7 +5,7 @@ import { request } from '@umijs/max';
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
-    data: API.CurrentUser;
+    data: API.UserInfo;
   }>('/user/current', {
     method: 'GET',
     ...(options || {}),
@@ -32,12 +32,20 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
-export async function register(body: API.RegisterParams) {
+export async function register(body: API.RegisterParams, options?: { [key: string]: any }) {
   return request<API.RegisterResult>('/user/register', {
     method: 'POST',
     headers:{
       'Content-Type': 'application/json',
     },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function searchUser(body: API.SearchUserParams) {
+  return request<API.PagedData<API.UserInfo>>('/user/search/paged', {
+    method: 'POST',
     data: body,
   });
 }

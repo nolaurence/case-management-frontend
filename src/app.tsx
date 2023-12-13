@@ -17,9 +17,9 @@ const loginPath = '/user/login';
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: API.UserInfo;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<API.UserInfo | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -60,9 +60,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.name,
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

@@ -2,15 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Form, Input, Row, Select, Table, Divider } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import {ProForm, ProFormText} from "@ant-design/pro-components";
-import type { ColumnsType } from "antd/es/table";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { searchUser } from "@/services/ant-design-pro/api";
 
-interface DataType {
-  userid: number;
-  account: string;
-  name: string;
-}
-
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<API.UserInfo> = [
   {
     title: '用户ID',
     dataIndex: 'userid',
@@ -25,30 +20,48 @@ const columns: ColumnsType<DataType> = [
     title: '用户名',
     dataIndex: 'name',
     key: 'name',
+  },
+  {
+    title: '角色',
+    dataIndex: 'role',
+    key: 'role',
   }
 ];
 
-const data: DataType[] = [
-  {
-    userid: 1,
-    account: 'admin',
-    name: '管理员',
-  },
-  {
-    userid: 2,
-    account: 'user',
-    name: '用户',
-  },
-];
-
 const Manage: React.FC = () => {
+
+  const [ pagination, setPagination ] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  });
+  const [ tableData, setTableData ] = useState<API.UserInfo[]>();
+
   return (
     <PageContainer title="用户管理1">
       <Card>
         <ProForm
           layout="horizontal"
           onFinish={async (values) => {
-            console.log(values);
+            console.log(JSON.stringify(pagination));
+            const searchResult = await searchUser({
+              account: (values && values.account) || undefined,
+              name: (values && values.name) || undefined,
+              userid: (values && values.userid) || undefined,
+              pageSize: pagination.pageSize,
+              current: pagination.current,
+            });
+
+            debugger;
+            // 设置数据
+            setTableData(searchResult.list);
+            const paginationResult = searchResult.pagination;
+            // 设置分页
+            setPagination({
+              current: paginationResult && paginationResult.current,
+              pageSize: paginationResult && paginationResult.pageSize,
+              showTotal: () => paginationResult && `总共 ${paginationResult.total} 个用户`,
+              total: paginationResult && paginationResult.total,
+            });
           }}
           submitter={{
             searchConfig: {
@@ -75,7 +88,7 @@ const Manage: React.FC = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={tableData}
           rowKey="id"
         />
       </Card>

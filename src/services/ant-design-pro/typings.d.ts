@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 declare namespace API {
-  type CurrentUser = {
+  type UserInfo = {
     account?: string;
     name?: string;
     avatar?: string;
@@ -21,6 +21,17 @@ declare namespace API {
     role?: number;
   };
 
+  type Pagination = {
+    current?: number;
+    pageSize?: number;
+    total?: number;
+  }
+
+  type PagedData<T> = {
+    list?: T[];
+    pagination?: Pagination;
+  }
+
   type LoginResult = {
     success?: boolean;
     data?: UserInfo;
@@ -33,6 +44,14 @@ declare namespace API {
     data?: number;
     code?: string;
     message?: string;
+  };
+
+  type SearchUserParams = {
+    account?: string;
+    name?: string;
+    userid?: number;
+    pageSize?: number;
+    current?: number;
   };
 
   type PageParams = {

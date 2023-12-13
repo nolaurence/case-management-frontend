@@ -78,7 +78,7 @@ const Login: React.FC = () => {
     }
   };
   const handleSubmit = async (values: API.LoginParams) => {
-    // 判断是登录还是注册
+    // TODO: 注册单独实现，这里不做
     const result = await login(values, { skipErrorHandler: true });
     if (result.success) {
       const defaultLoginSuccessMessage = '登录成功！';
