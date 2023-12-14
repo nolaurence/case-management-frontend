@@ -35,34 +35,42 @@ const Manage: React.FC = () => {
     pageSize: 10,
   });
   const [ tableData, setTableData ] = useState<API.UserInfo[]>();
+  const [ tableLoading, setTableLoading ] = useState<boolean>(false);
+
+  const search = async (values: Record<string, any>)=> {
+    setTableLoading(true);
+    const searchResult = await searchUser({
+      account: (values && values.account) || undefined,
+      name: (values && values.name) || undefined,
+      userid: (values && values.userid) || undefined,
+      pageSize: pagination.pageSize,
+      current: pagination.current,
+    });
+
+    // 设置数据
+    setTableData(searchResult.data.list);
+    const paginationResult = searchResult.data.pagination;
+    // 设置分页
+    setPagination({
+      current: paginationResult && paginationResult.current,
+      pageSize: paginationResult && paginationResult.pageSize,
+      showTotal: () => paginationResult && `总共 ${paginationResult.total} 个用户`,
+      total: paginationResult && paginationResult.total,
+    });
+    setTableLoading(false);
+  }
+
+  useEffect(() => {
+    search({});
+  }, []);
 
   return (
     <PageContainer title="用户管理1">
       <Card>
         <ProForm
           layout="horizontal"
-          onFinish={async (values) => {
-            console.log(JSON.stringify(pagination));
-            const searchResult = await searchUser({
-              account: (values && values.account) || undefined,
-              name: (values && values.name) || undefined,
-              userid: (values && values.userid) || undefined,
-              pageSize: pagination.pageSize,
-              current: pagination.current,
-            });
-
-            debugger;
-            // 设置数据
-            setTableData(searchResult.list);
-            const paginationResult = searchResult.pagination;
-            // 设置分页
-            setPagination({
-              current: paginationResult && paginationResult.current,
-              pageSize: paginationResult && paginationResult.pageSize,
-              showTotal: () => paginationResult && `总共 ${paginationResult.total} 个用户`,
-              total: paginationResult && paginationResult.total,
-            });
-          }}
+          onFinish={search}
+          onReset={() => search({})}
           submitter={{
             searchConfig: {
               submitText: '搜索',
@@ -90,6 +98,7 @@ const Manage: React.FC = () => {
           columns={columns}
           dataSource={tableData}
           rowKey="id"
+          loading={tableLoading}
         />
       </Card>
     </PageContainer>

@@ -44,7 +44,7 @@ export async function register(body: API.RegisterParams, options?: { [key: strin
 }
 
 export async function searchUser(body: API.SearchUserParams) {
-  return request<API.PagedData<API.UserInfo>>('/user/search/paged', {
+  return request<API.Response<API.PagedData<API.UserInfo>>>('/user/search/paged', {
     method: 'POST',
     data: body,
   });

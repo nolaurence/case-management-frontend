@@ -21,6 +21,13 @@ declare namespace API {
     role?: number;
   };
 
+  type Response<T> = {
+    success: boolean;
+    data: T;
+    errorCode?: number;
+    errorMessage?: string;
+  };
+
   type Pagination = {
     current?: number;
     pageSize?: number;
