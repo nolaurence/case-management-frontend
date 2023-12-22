@@ -1,34 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, Input, Row, Select, Table, Divider } from 'antd';
+import { Button, Card, Table, Divider } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import {ProForm, ProFormText} from "@ant-design/pro-components";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { searchUser } from "@/services/ant-design-pro/api";
+import {useModel} from "@@/exports";
 
-const columns: ColumnsType<API.UserInfo> = [
-  {
-    title: '用户ID',
-    dataIndex: 'userid',
-    key: 'userid',
-  },
-  {
-    title: '登录名',
-    dataIndex: 'account',
-    key: 'account',
-  },
-  {
-    title: '用户名',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '角色',
-    dataIndex: 'role',
-    key: 'role',
-  }
-];
+enum UserRole {
+  admin = 1,
+  user = 2,
+}
 
 const Manage: React.FC = () => {
+
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser || { role: 2 };
+  const isAdmin = currentUser.role === UserRole.admin;
+
+  const columns: ColumnsType<API.UserInfo> = [
+    {
+      title: '用户ID',
+      dataIndex: 'userid',
+      key: 'userid',
+    },
+    {
+      title: '登录名',
+      dataIndex: 'account',
+      key: 'account',
+    },
+    {
+      title: '用户名',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '角色',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role: number) => (UserRole[role] || 'Unknown')
+    },
+    {
+      title: '操作',
+      key: 'operations',
+      render: () => {
+        if (isAdmin) {
+          return <Button type="link" >管理员按钮</Button>;
+        } else {
+          return <Button type="link" disabled >用户禁用</Button>;
+        }
+      }
+    }
+  ];
 
   const [ pagination, setPagination ] = useState<TablePaginationConfig>({
     current: 1,
@@ -65,7 +87,7 @@ const Manage: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer title="用户管理1">
+    <PageContainer title="用户管理页">
       <Card>
         <ProForm
           layout="horizontal"

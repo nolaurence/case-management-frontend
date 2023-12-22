@@ -15,6 +15,7 @@ import { Alert, Button, message, Tabs, Row } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import RegisterDrawer from './registerDrawer';
 // const ActionIcons = () => {
 //   const langClassName = useEmotionCss(({ token }) => {
 //     return {
@@ -157,10 +158,10 @@ const Login: React.FC = () => {
                 key: 'account',
                 label: '登录',
               },
-              {
-                key: 'register',
-                label: '注册',
-              },
+              // {
+              //   key: 'register',
+              //   label: '注册',
+              // },
             ]}
           />
 
@@ -170,7 +171,7 @@ const Login: React.FC = () => {
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="account"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
@@ -203,6 +204,7 @@ const Login: React.FC = () => {
                 }}
               >
                 <Row justify="end">
+                  <RegisterDrawer />
                   <a
                     style={{
                       float: 'right',

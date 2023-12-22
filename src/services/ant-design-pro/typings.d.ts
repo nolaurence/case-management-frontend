@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 declare namespace API {
+
   type UserInfo = {
     account?: string;
     name?: string;
@@ -18,7 +19,7 @@ declare namespace API {
     address?: string;
     phone?: string;
     status?: number;
-    role?: number;
+    role: number;
   };
 
   type Response<T> = {
@@ -99,9 +100,13 @@ declare namespace API {
   };
 
   type RegisterParams = {
-    username?: string;
-    password?: string;
-    checkPassword?: string;
+    account: string;
+    name: string;
+    password: string;
+    checkPassword: string;
+    gender: number;
+    email?: string;
+    phone?: string;
   };
 
   type ErrorResponse = {
