@@ -1,57 +1,33 @@
-# Ant Design Pro
+# 测试用例管理平台-front end
+# test case management platform front end
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+后端 ( backend repo ) : https://github.com/nolaurence/case-management-backend
 
-## Environment Prepare
+### 项目介绍
+1. 支持xmind类型的测试用例在线编写
+2. 测试模块和用例分离
+3. 角色登录以及权限相关
+4. （in design）用例的权限管理
 
-Install `node_modules`:
+### Project intro
+1. support xmind type test case online edit
+2. test module and case separate
+3. role login and permission
+4. （in design）permission management of case
 
-```bash
-npm install
-```
 
-or
+### 当前的开发进度
+* 完成了角色登录，登出，注销相关功能
 
-```bash
-yarn
-```
+### Current development progress
+* complete role login, logout, logout function
 
-## Provided Scripts
 
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
-
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
-```bash
-npm start
-```
-
-### Build project
-
-```bash
-npm run build
-```
-
-### Check code style
-
-```bash
-npm run lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+### 具体开发的milestone
+- [x] 完成用户登录相关功能
+- [x] xmind 前端技术预研
+- [ ] xmind 管理的相关功能开发
+- [ ] xmind 功能开发
+- [ ] xmind 后端存储设计 + 开发
+- [ ] 角色权限管理功能
+- [ ] 测试用例权限管理
