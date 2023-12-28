@@ -1,17 +1,11 @@
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 // import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Button, message, Tabs, Row } from 'antd';
+import { Alert, Button, message, Row, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
@@ -80,21 +74,28 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.LoginParams) => {
     // TODO: 注册单独实现，这里不做
-    const result = await login(values, { skipErrorHandler: true });
-    if (result.success) {
-      const defaultLoginSuccessMessage = '登录成功！';
-      message.success(defaultLoginSuccessMessage);
-      await fetchUserInfo();
-      const urlParams = new URL(window.location.href).searchParams;
-      history.push(urlParams.get('redirect') || '/');
-      return;
-    } else {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
-      message.error(defaultLoginFailureMessage);
+    try {
+      const result = await login(values, { skipErrorHandler: true });
+
+      if (result.success) {
+        const defaultLoginSuccessMessage = '登录成功！';
+        message.success(defaultLoginSuccessMessage);
+        await fetchUserInfo();
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/');
+        return;
+      } else {
+        const defaultLoginFailureMessage = '登录失败，请重试！';
+        message.error(defaultLoginFailureMessage);
+      }
+      console.log(result.message);
+      // 如果失败去设置用户错误信息
+      setUserLoginState(result);
+    } catch (error: any) {
+      if (error?.name === 'BizError') {
+        message.error(error.info.errorMessage);
+      }
     }
-    console.log(result.message);
-    // 如果失败去设置用户错误信息
-    setUserLoginState(result);
   };
   const SubmitterButton: React.FC = () => {
     let btnText: string = '';
@@ -104,16 +105,20 @@ const Login: React.FC = () => {
       btnText = '注 册';
     }
     return (
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        // height: "100vh"
-      }}>
-        <Button type="primary" size="large" block htmlType="submit">{btnText}</Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // height: "100vh"
+        }}
+      >
+        <Button type="primary" size="large" block htmlType="submit">
+          {btnText}
+        </Button>
       </div>
     );
-  }
+  };
   return (
     <div className={containerClassName}>
       <Helmet>
@@ -143,7 +148,7 @@ const Login: React.FC = () => {
           submitter={{
             render: () => {
               return <SubmitterButton />;
-            }
+            },
           }}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
@@ -158,10 +163,6 @@ const Login: React.FC = () => {
                 key: 'account',
                 label: '登录',
               },
-              // {
-              //   key: 'register',
-              //   label: '注册',
-              // },
             ]}
           />
 
@@ -210,7 +211,7 @@ const Login: React.FC = () => {
                       float: 'right',
                     }}
                     onClick={() => {
-                      message.info("还未实现");
+                      message.info('还未实现');
                     }}
                   >
                     忘记密码 ?
@@ -232,7 +233,7 @@ const Login: React.FC = () => {
                   {
                     required: true,
                     message: '用户名是必填项！',
-                  }
+                  },
                 ]}
               />
               <ProFormText.Password
