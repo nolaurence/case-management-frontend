@@ -5,7 +5,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Button, message, Row, Tabs } from 'antd';
+import { Alert, Button, message, Row } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
@@ -48,7 +48,6 @@ const LoginMessage: React.FC<{
 };
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
@@ -98,12 +97,7 @@ const Login: React.FC = () => {
     }
   };
   const SubmitterButton: React.FC = () => {
-    let btnText: string = '';
-    if (type === 'account') {
-      btnText = '登 录';
-    } else if (type === 'register') {
-      btnText = '注 册';
-    }
+    let btnText: string = '登 录';
     return (
       <div
         style={{
@@ -139,12 +133,11 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'}
+          title="Case Manage Sys"
+          subTitle={'向着星辰与深渊，旅行者欢迎来到冒险家协会~'}
           initialValues={{
             autoLogin: true,
           }}
-          // actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           submitter={{
             render: () => {
               return <SubmitterButton />;
@@ -154,118 +147,58 @@ const Login: React.FC = () => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
-          <Tabs
-            activeKey={type}
-            onChange={setType}
-            centered
-            items={[
-              {
-                key: 'account',
-                label: '登录',
-              },
-            ]}
-          />
-
           {userLoginState.success === false && (
             <LoginMessage content={userLoginState.message || ''} />
           )}
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="account"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                placeholder={'用户名: admin or user'}
-                rules={[
-                  {
-                    required: true,
-                    message: '用户名是必填项！',
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={'密码: ant.design'}
-                rules={[
-                  {
-                    required: true,
-                    message: '密码是必填项！',
-                  },
-                ]}
-              />
-              <div
-                style={{
-                  marginBottom: 42,
-                }}
-              >
-                <Row justify="end">
-                  <RegisterDrawer />
-                  <a
-                    style={{
-                      float: 'right',
-                    }}
-                    onClick={() => {
-                      message.info('还未实现');
-                    }}
-                  >
-                    忘记密码 ?
-                  </a>
-                </Row>
-              </div>
-            </>
-          )}
-          {type === 'register' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                name="username"
-                placeholder={'用户名！'}
-                rules={[
-                  {
-                    required: true,
-                    message: '用户名是必填项！',
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={'请输入密码！'}
-                rules={[
-                  {
-                    required: true,
-                    message: '密码是必填项！',
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="checkPasswork"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={'请再次输入密码！'}
-                rules={[
-                  {
-                    required: true,
-                    message: '确认密码是必填项！',
-                  },
-                ]}
-              />
-            </>
-          )}
+          <>
+            <ProFormText
+              name="account"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined />,
+              }}
+              placeholder={'用户名: '}
+              rules={[
+                {
+                  required: true,
+                  message: '用户名是必填项！',
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              placeholder={'密码: '}
+              rules={[
+                {
+                  required: true,
+                  message: '密码是必填项！',
+                },
+              ]}
+            />
+            <div
+              style={{
+                marginBottom: 42,
+              }}
+            >
+              <Row justify="end">
+                <RegisterDrawer />
+                <a
+                  style={{
+                    float: 'right',
+                  }}
+                  onClick={() => {
+                    message.info('还未实现');
+                  }}
+                >
+                  忘记密码 ?
+                </a>
+              </Row>
+            </div>
+          </>
         </LoginForm>
       </div>
       <Footer />

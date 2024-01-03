@@ -1,6 +1,7 @@
+import type { TreeGraph } from '@antv/g6';
 import G6 from '@antv/g6';
-import { Card } from 'antd';
-import React, { useEffect } from 'react';
+import { Card, message, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 const demoData = {
   id: 'Modeling Methods',
@@ -111,10 +112,13 @@ const demoData = {
 };
 
 const MindMapDemo: React.FC = () => {
+  const [graphInstance, setGraphInstance] = useState<TreeGraph>();
+
+  // 思维导图相关方法 ========================= START =====================================
   useEffect(() => {
     const container = document.getElementById('demoTreeGraph');
     const width = container?.scrollWidth;
-    const height = container?.scrollHeight || 500;
+    const height = container?.scrollHeight || 800;
     const graph = new G6.TreeGraph({
       container: 'demoTreeGraph',
       width,
@@ -124,6 +128,7 @@ const MindMapDemo: React.FC = () => {
           {
             type: 'collapse-expand',
             onChange: function onChange(item, collapsed) {
+              // @ts-ignore
               const data = item.get('model');
               data.collapsed = collapsed;
               return true;
@@ -132,6 +137,7 @@ const MindMapDemo: React.FC = () => {
           'drag-canvas',
           'zoom-canvas',
         ],
+        edit: ['click-select'],
       },
       defaultNode: {
         size: 26,
@@ -144,8 +150,8 @@ const MindMapDemo: React.FC = () => {
         type: 'cubic-horizontal',
       },
       layout: {
-        type: 'mindmap',
-        direction: 'H',
+        type: 'compactBox',
+        direction: 'LR',
         getHeight: () => {
           return 16;
         },
@@ -187,12 +193,42 @@ const MindMapDemo: React.FC = () => {
     graph.data(demoData);
     graph.render();
     graph.fitView();
+
+    setGraphInstance(graph);
   }, []);
 
+  // 思维导图相关方法 ========================= END =====================================
+
   return (
-    <Card>
-      <div id="demoTreeGraph"></div>
-    </Card>
+    <>
+      <div style={{ marginBottom: 5 }}>
+        <p>当前状态：</p>
+        <Select
+          style={{ marginLeft: 4 }}
+          options={[
+            {
+              label: 'default',
+              value: 'default',
+            },
+            {
+              label: 'edit',
+              value: 'edit',
+            },
+          ]}
+          defaultValue="default"
+          onChange={(value) => {
+            if (graphInstance) {
+              graphInstance.setMode(value);
+            } else {
+              message.info('gg');
+            }
+          }}
+        />
+      </div>
+      <Card>
+        <div id="demoTreeGraph"></div>
+      </Card>
+    </>
   );
 };
 
