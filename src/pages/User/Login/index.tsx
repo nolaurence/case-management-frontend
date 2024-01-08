@@ -72,7 +72,6 @@ const Login: React.FC = () => {
     }
   };
   const handleSubmit = async (values: API.LoginParams) => {
-    // TODO: 注册单独实现，这里不做
     try {
       const result = await login(values, { skipErrorHandler: true });
 

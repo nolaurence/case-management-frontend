@@ -115,12 +115,81 @@ const MindMapDemo: React.FC = () => {
   const [graphInstance, setGraphInstance] = useState<TreeGraph>();
 
   // 思维导图相关方法 ========================= START =====================================
+
+  // 注册一个节点style
+  G6.registerNode(
+    'treeNode',
+    {
+      drawShape: (cfg, group) => {
+        const width = cfg?.style?.width;
+        const stroke = cfg?.style?.stroke;
+        const rect = group?.addShape('rect', {
+          attrs: {
+            x: -(width || 0) / 2,
+            y: -15,
+            width,
+            height: 30,
+            radius: 15,
+            stroke,
+            lineWidth: 1.2,
+            fillOpacity: 1,
+          },
+          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
+          name: 'rect-shape',
+        });
+        group?.addShape('circle', {
+          attrs: {
+            x: -(width || 0) / 2,
+            y: 0,
+            r: 3,
+            fill: stroke,
+          },
+          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
+          name: 'circle-shape',
+        });
+        group?.addShape('circle', {
+          attrs: {
+            x: (width || 0) / 2,
+            y: 0,
+            r: 3,
+            fill: stroke,
+          },
+          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
+          name: 'circle-shape2',
+        });
+        return rect;
+      },
+      getAnchorPoints: () => {
+        return [
+          [0, 0.5],
+          [1, 0.5],
+        ];
+      },
+      update: function update(cfg, item) {
+        const group = item.getContainer();
+        const children = group.get('children');
+        const node = children[0];
+        const circleLeft = children[1];
+        const circleRight = children[2];
+
+        const stroke = cfg?.style?.stroke;
+
+        if (stroke) {
+          node.attr('stroke', stroke);
+          circleLeft.attr('fill', stroke);
+          circleRight.attr('fill', stroke);
+        }
+      },
+    },
+    'single-node',
+  );
+
   useEffect(() => {
     const container = document.getElementById('demoTreeGraph');
     const width = container?.scrollWidth;
     const height = container?.scrollHeight || 800;
     const graph = new G6.TreeGraph({
-      container: 'demoTreeGraph',
+      container: 'treeContainer',
       width,
       height,
       modes: {
@@ -140,11 +209,17 @@ const MindMapDemo: React.FC = () => {
         edit: ['click-select'],
       },
       defaultNode: {
-        size: 26,
-        anchorPoints: [
-          [0, 0.5],
-          [1, 0.5],
-        ],
+        type: 'treeNode',
+        labelCfg: {
+          style: {
+            fill: '#000000A6',
+            fontSize: 10,
+          },
+        },
+        style: {
+          stroke: '#72CC4A',
+          width: 150,
+        },
       },
       defaultEdge: {
         type: 'cubic-horizontal',
@@ -170,23 +245,9 @@ const MindMapDemo: React.FC = () => {
       },
     });
 
-    let centerX: number | undefined;
-    graph.node(function (node) {
-      if (node.id === 'Modeling Methods') {
-        centerX = node.x;
-      }
-
+    graph.node((node) => {
       return {
         label: node.id,
-        labelCfg: {
-          position:
-            node.children && node.children.length > 0
-              ? 'right'
-              : node.x > centerX
-              ? 'right'
-              : 'left',
-          offset: 5,
-        },
       };
     });
 
@@ -226,7 +287,7 @@ const MindMapDemo: React.FC = () => {
         />
       </div>
       <Card>
-        <div id="demoTreeGraph"></div>
+        <div id="treeContainer"></div>
       </Card>
     </>
   );
