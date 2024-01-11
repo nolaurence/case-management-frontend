@@ -128,7 +128,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
 
 /**
- * 为了本地开发遍历，直接重定向端口
+ * 为了本地开发便利，直接重定向端口
  */
 let baseURL: string;
 let allowCROSCredentials = false;
