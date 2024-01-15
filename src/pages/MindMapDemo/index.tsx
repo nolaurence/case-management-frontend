@@ -1,115 +1,8 @@
-import type { TreeGraph } from '@antv/g6';
+import type {TreeGraph} from '@antv/g6';
 import G6 from '@antv/g6';
-import { Card, message, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
-
-const demoData = {
-  id: 'Modeling Methods',
-  children: [
-    {
-      id: 'Classification',
-      children: [
-        {
-          id: 'Logistic regression',
-        },
-        {
-          id: 'Linear discriminant analysis',
-        },
-        {
-          id: 'Rules',
-        },
-        {
-          id: 'Decision trees',
-        },
-        {
-          id: 'Naive Bayes',
-        },
-        {
-          id: 'K nearest neighbor',
-        },
-        {
-          id: 'Probabilistic neural network',
-        },
-        {
-          id: 'Support vector machine',
-        },
-      ],
-    },
-    {
-      id: 'Consensus',
-      children: [
-        {
-          id: 'Models diversity',
-          children: [
-            {
-              id: 'Different initializations',
-            },
-            {
-              id: 'Different parameter choices',
-            },
-            {
-              id: 'Different architectures',
-            },
-            {
-              id: 'Different modeling methods',
-            },
-            {
-              id: 'Different training sets',
-            },
-            {
-              id: 'Different feature sets',
-            },
-          ],
-        },
-        {
-          id: 'Methods',
-          children: [
-            {
-              id: 'Classifier selection',
-            },
-            {
-              id: 'Classifier fusion',
-            },
-          ],
-        },
-        {
-          id: 'Common',
-          children: [
-            {
-              id: 'Bagging',
-            },
-            {
-              id: 'Boosting',
-            },
-            {
-              id: 'AdaBoost',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'Regression',
-      children: [
-        {
-          id: 'Multiple linear regression',
-        },
-        {
-          id: 'Partial least squares',
-        },
-        {
-          id: 'Multi-layer feedforward neural network',
-        },
-        {
-          id: 'General regression neural network',
-        },
-        {
-          id: 'Support vector regression',
-        },
-      ],
-    },
-  ],
-};
+import {Card, message, Select} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {mockData} from './mockData';
 
 const MindMapDemo: React.FC = () => {
   const [graphInstance, setGraphInstance] = useState<TreeGraph>();
@@ -120,65 +13,47 @@ const MindMapDemo: React.FC = () => {
   G6.registerNode(
     'treeNode',
     {
-      drawShape: (cfg, group) => {
-        const width = cfg?.style?.width;
-        const stroke = cfg?.style?.stroke;
-        const rect = group?.addShape('rect', {
-          attrs: {
-            x: -(width || 0) / 2,
-            y: -15,
-            width,
-            height: 30,
-            radius: 15,
-            stroke,
-            lineWidth: 1.2,
-            fillOpacity: 1,
-          },
-          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
-          name: 'rect-shape',
-        });
-        group?.addShape('circle', {
-          attrs: {
-            x: -(width || 0) / 2,
-            y: 0,
-            r: 3,
-            fill: stroke,
-          },
-          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
-          name: 'circle-shape',
-        });
-        group?.addShape('circle', {
-          attrs: {
-            x: (width || 0) / 2,
-            y: 0,
-            r: 3,
-            fill: stroke,
-          },
-          // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
-          name: 'circle-shape2',
-        });
-        return rect;
+      jsx: (cfg) => {
+        const width = G6.Util.getTextSize(cfg.label, 14)[0] + 24;
+        const color = cfg.color || cfg.style?.stroke;
+
+        return `
+          <group>
+            <rect draggable="true" style={{
+              width: ${width + 24},
+              height: 22,
+              backgroundColor: '#ffffff',
+              borderRadius: 5,
+              justifyContent: 'center',
+            }}>
+              <text draggable="true" style={{ fontSize: 14, marginLeft: 12, marginTop: 6 }}>
+                ${cfg.label}
+              </text>
+            </rect>
+          </group>
+          // <foreignObject width="100" height="100">
+          //   <div
+          //     style={{
+          //       width: 100,
+          //       height: 100,
+          //       background: '#fff',
+          //       border: '1px solid #72CC4A',
+          //       borderRadius: '50%',
+          //       display: 'flex',
+          //       justifyContent: 'center',
+          //       alignItems: 'center',
+          //     }}
+          //   >
+          //     {cfg.id}
+          //   </div>
+          // </foreignObject>
+        `;
       },
       getAnchorPoints: () => {
         return [
           [0, 0.5],
           [1, 0.5],
         ];
-      },
-      update: function update(cfg, item) {
-        const group = item.getContainer();
-        const children = group.get('children');
-        const node = children[0];
-        const circleLeft = children[1];
-        const circleRight = children[2];
-
-        const stroke = cfg?.style?.stroke;
-
-        if (stroke) {
-          node.attr('stroke', stroke);
-          circleLeft.attr('fill', stroke);
-          circleRight.attr('fill', stroke);
-        }
       },
     },
     'single-node',
@@ -210,12 +85,12 @@ const MindMapDemo: React.FC = () => {
       },
       defaultNode: {
         type: 'treeNode',
-        labelCfg: {
-          style: {
-            fill: '#000000A6',
-            fontSize: 10,
-          },
-        },
+        // labelCfg: {
+        //   style: {
+        //     fill: '#000000A6',
+        //     fontSize: 14,
+        //   },
+        // },
         style: {
           stroke: '#72CC4A',
           width: 150,
@@ -251,7 +126,7 @@ const MindMapDemo: React.FC = () => {
       };
     });
 
-    graph.data(demoData);
+    graph.data(mockData);
     graph.render();
     graph.fitView();
 
@@ -262,10 +137,10 @@ const MindMapDemo: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: 5 }}>
+      <div style={{marginBottom: 5}}>
         <p>当前状态：</p>
         <Select
-          style={{ marginLeft: 4 }}
+          style={{marginLeft: 4}}
           options={[
             {
               label: 'default',
