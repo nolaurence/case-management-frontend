@@ -1,105 +1,132 @@
-export const mockData = {
-  id: 'Modeling Methods',
-  children: [
+export const rawData = {
+  label: 'Modeling Methods',
+  id: '0',
+  children: [{
+    label: 'Classification',
+    id: '0-1',
+    color: '#5AD8A6',
+    children: [{
+      label: 'Logistic regression',
+      id: '0-1-1',
+    },
+      {
+        label: 'Linear discriminant analysis',
+        id: '0-1-2',
+      },
+      {
+        label: 'Rules',
+        id: '0-1-3',
+      },
+      {
+        label: 'Decision trees',
+        id: '0-1-4',
+      },
+      {
+        label: 'Naive Bayes',
+        id: '0-1-5',
+      },
+      {
+        label: 'K nearest neighbor',
+        id: '0-1-6',
+      },
+      {
+        label: 'Probabilistic neural network',
+        id: '0-1-7',
+      },
+      {
+        label: 'Support vector machine',
+        id: '0-1-8',
+      },
+    ],
+  },
     {
-      id: 'Classification',
-      children: [
+      label: 'Consensus',
+      id: '0-2',
+      color: '#F6BD16',
+      children: [{
+        label: 'Models diversity',
+        id: '0-2-1',
+        children: [{
+          label: 'Different initializations',
+          id: '0-2-1-1',
+        },
+          {
+            label: 'Different parameter choices',
+            id: '0-2-1-2',
+          },
+          {
+            label: 'Different architectures',
+            id: '0-2-1-3',
+          },
+          {
+            label: 'Different modeling methods',
+            id: '0-2-1-4',
+          },
+          {
+            label: 'Different training sets',
+            id: '0-2-1-5',
+          },
+          {
+            label: 'Different feature sets',
+            id: '0-2-1-6',
+          },
+        ],
+      },
         {
-          id: 'Logistic regression',
+          label: 'Methods',
+          id: '0-2-2',
+          children: [{
+            label: 'Classifier selection',
+            id: '0-2-2-1',
+          },
+            {
+              label: 'Classifier fusion',
+              id: '0-2-2-2',
+            },
+          ],
         },
         {
-          id: 'Linear discriminant analysis',
-        },
-        {
-          id: 'Rules',
-        },
-        {
-          id: 'Decision trees',
-        },
-        {
-          id: 'Naive Bayes',
-        },
-        {
-          id: 'K nearest neighbor',
-        },
-        {
-          id: 'Probabilistic neural network',
-        },
-        {
-          id: 'Support vector machine',
+          label: 'Common',
+          id: '0-2-3',
+          children: [{
+            label: 'Bagging',
+            id: '0-2-3-1',
+          },
+            {
+              label: 'Boosting',
+              id: '0-2-3-2',
+            },
+            {
+              label: 'AdaBoost',
+              id: '0-2-3-3',
+            },
+          ],
         },
       ],
     },
     {
-      id: 'Consensus',
-      children: [
+      label: 'Regression',
+      id: '0-3',
+      color: '#269A99',
+      children: [{
+        label: 'Multiple linear regression',
+        id: '0-3-1',
+      },
         {
-          id: 'Models diversity',
-          children: [
-            {
-              id: 'Different initializations',
-            },
-            {
-              id: 'Different parameter choices',
-            },
-            {
-              id: 'Different architectures',
-            },
-            {
-              id: 'Different modeling methods',
-            },
-            {
-              id: 'Different training sets',
-            },
-            {
-              id: 'Different feature sets',
-            },
-          ],
+          label: 'Partial least squares',
+          id: '0-3-2',
         },
         {
-          id: 'Methods',
-          children: [
-            {
-              id: 'Classifier selection',
-            },
-            {
-              id: 'Classifier fusion',
-            },
-          ],
+          label: 'Multi-layer feedforward neural network',
+          id: '0-3-3',
         },
         {
-          id: 'Common',
-          children: [
-            {
-              id: 'Bagging',
-            },
-            {
-              id: 'Boosting',
-            },
-            {
-              id: 'AdaBoost',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'Regression',
-      children: [
-        {
-          id: 'Multiple linear regression',
+          label: 'General regression neural network',
+          id: '0-3-4',
         },
         {
-          id: 'Partial least squares',
-        },
-        {
-          id: 'Multi-layer feedforward neural network',
-        },
-        {
-          id: 'General regression neural network',
-        },
-        {
-          id: 'Support vector regression',
+          label: 'Support vector regression',
+          id: '0-3-5',
         },
       ],
     },
