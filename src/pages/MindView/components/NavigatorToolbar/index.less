@@ -1,0 +1,54 @@
+.navigatorContainer {
+  padding: 0 12px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: hsla(0, 0%, 100%, 0.8);
+  border-radius: 5px;
+  opacity: 0.8;
+  height: 44px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+
+  &.isDark {
+    background: #262a2e;
+
+    .item {
+      a {
+        color: hsla(0, 0%, 100%, 0.6);
+      }
+
+      .btn {
+        color: hsla(0, 0%, 100%, 0.6);
+      }
+    }
+  }
+
+  .item {
+    margin-right: 20px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    a {
+      color: #303133;
+      text-decoration: none;
+    }
+
+    .btn {
+      cursor: pointer;
+      font-size: 18px;
+    }
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .navigatorContainer {
+    left: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 60px;
+  }
+}

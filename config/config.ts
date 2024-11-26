@@ -4,20 +4,22 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+
 const { REACT_APP_ENV = 'dev' } = process.env;
+
 export default defineConfig({
-  /**
-   * 路由开启hash
-   */
-  history: {
-    type: 'hash',
-  },
+  esbuildMinifyIIFE: true,
   /**
    * @name 开启 hash 模式
    * @description 让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存。
    * @doc https://umijs.org/docs/api/config#hash
    */
   hash: false,
+
+  history: {
+    type: "hash",
+  },
+
   /**
    * @name 兼容性设置
    * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖
@@ -96,7 +98,15 @@ export default defineConfig({
   /**
    * @name 国际化插件
    * @doc https://umijs.org/docs/max/i18n
-   */ /**
+   */
+  locale: {
+    // default zh-CN
+    default: 'zh-CN',
+    antd: true,
+    // default true, when it is true, will use `navigator.language` overwrite default
+    baseNavigator: true,
+  },
+  /**
    * @name antd 插件
    * @description 内置了 babel import 插件
    * @doc https://umijs.org/docs/max/antd#antd
@@ -120,10 +130,7 @@ export default defineConfig({
    */
   headScripts: [
     // 解决首次加载时白屏的问题
-    {
-      src: '/scripts/loading.js',
-      async: true,
-    },
+    { src: '/scripts/loading.js', async: true },
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
@@ -149,5 +156,6 @@ export default defineConfig({
   mfsu: {
     strategy: 'normal',
   },
+  esbuildMinifyIIFE: true,
   requestRecord: {},
 });

@@ -1,0 +1,61 @@
+.box {
+  padding: 0 20px;
+
+  &.isDark {
+    .title {
+      color: #fff;
+    }
+
+    .list {
+      .item {
+        .icon {
+          color: hsla(0, 0%, 100%, 0.6);
+        }
+        .name {
+          color: hsla(0, 0%, 100%, 0.6);
+        }
+
+        .value {
+          color: hsla(0, 0%, 100%, 0.3);
+        }
+      }
+    }
+  }
+
+  .title {
+    margin: 26px 0 20px;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .list {
+    font-size: 14px;
+
+    .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+
+      .icon {
+        margin-right: 16px;
+        font-size: 16px;
+      }
+
+      .name {
+        overflow: hidden;
+        color: #333;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .value {
+        margin-left: auto;
+        overflow: hidden;
+        color: #909090;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

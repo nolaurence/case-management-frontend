@@ -3,35 +3,14 @@ import { login } from '@/services/ant-design-pro/api';
 // import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
 import { Alert, Button, message, Row } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-import RegisterDrawer from './registerDrawer';
-// const ActionIcons = () => {
-//   const langClassName = useEmotionCss(({ token }) => {
-//     return {
-//       marginLeft: '8px',
-//       color: 'rgba(0, 0, 0, 0.2)',
-//       fontSize: '24px',
-//       verticalAlign: 'middle',
-//       cursor: 'pointer',
-//       transition: 'color 0.3s',
-//       '&:hover': {
-//         color: token.colorPrimaryActive,
-//       },
-//     };
-//   });
-//   return (
-//     <>
-//       <AlipayCircleOutlined key="AlipayCircleOutlined" className={langClassName} />
-//       <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={langClassName} />
-//       <WeiboCircleOutlined key="WeiboCircleOutlined" className={langClassName} />
-//     </>
-//   );
-// };
+// import RegisterDrawer from './registerDrawer';
+import { createStyles } from 'antd-style';
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {
@@ -46,11 +25,32 @@ const LoginMessage: React.FC<{
     />
   );
 };
-const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const { initialState, setInitialState } = useModel('@@initialState');
-  const containerClassName = useEmotionCss(() => {
-    return {
+
+const useStyles = createStyles(({ token }) => {
+  return {
+    action: {
+      marginLeft: '8px',
+      color: 'rgba(0, 0, 0, 0.2)',
+      fontSize: '24px',
+      verticalAlign: 'middle',
+      cursor: 'pointer',
+      transition: 'color 0.3s',
+      '&:hover': {
+        color: token.colorPrimaryActive,
+      },
+    },
+    lang: {
+      width: 42,
+      height: 42,
+      lineHeight: '42px',
+      position: 'fixed',
+      right: 16,
+      borderRadius: token.borderRadius,
+      ':hover': {
+        backgroundColor: token.colorBgTextHover,
+      },
+    },
+    container: {
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
@@ -58,8 +58,17 @@ const Login: React.FC = () => {
       backgroundImage:
         "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
       backgroundSize: '100% 100%',
-    };
-  });
+    },
+  };
+});
+
+const Login: React.FC = () => {
+  const { styles } = useStyles();
+
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const { initialState, setInitialState } = useModel('@@initialState');
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -73,6 +82,7 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.LoginParams) => {
     try {
+      setButtonLoading(true);
       const result = await login(values, { skipErrorHandler: true });
 
       if (result.success) {
@@ -93,6 +103,8 @@ const Login: React.FC = () => {
       if (error?.name === 'BizError') {
         message.error(error.info.errorMessage);
       }
+    } finally {
+      setButtonLoading(false);
     }
   };
   const SubmitterButton: React.FC = () => {
@@ -106,14 +118,14 @@ const Login: React.FC = () => {
           // height: "100vh"
         }}
       >
-        <Button type="primary" size="large" block htmlType="submit">
+        <Button loading={buttonLoading} type="primary" size="large" block htmlType="submit">
           {btnText}
         </Button>
       </div>
     );
   };
   return (
-    <div className={containerClassName}>
+    <div className={styles.container}>
       <Helmet>
         <title>
           {'登录'}- {Settings.title}
@@ -132,8 +144,8 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Case Manage Sys"
-          subTitle={'向着星辰与深渊，旅行者欢迎来到冒险家协会~'}
+          title="AssetManageSystem"
+          subTitle={'请登录'}
           initialValues={{
             autoLogin: true,
           }}
@@ -184,7 +196,7 @@ const Login: React.FC = () => {
               }}
             >
               <Row justify="end">
-                <RegisterDrawer />
+                {/*<RegisterDrawer />*/}
                 <a
                   style={{
                     float: 'right',

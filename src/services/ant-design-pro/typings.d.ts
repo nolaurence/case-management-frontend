@@ -22,6 +22,13 @@ declare namespace API {
     role: number;
   };
 
+  type SubmitRequest = {
+    description: string;
+    amount: number;
+    imageURL?: string;
+    clientId?: number;
+  };
+
   type Response<T> = {
     success: boolean;
     data: T;
@@ -30,6 +37,8 @@ declare namespace API {
   };
 
   type Pagination = {
+    position?: 'top' | 'bottom' | 'both';
+    align?: 'start' | 'center' | 'end';
     current?: number;
     pageSize?: number;
     total?: number;
@@ -139,4 +148,81 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  type SalesRecord = {
+    id: number;
+    description: string;
+    amount: number;
+    imageURL?: string;
+    clientId?: number;
+    clientName?: string;
+    creator?: string;
+    modifier?: string;
+    gmtCreate?: string;
+  };
+
+  type ClientQuery = {
+    name?: string;
+    creator?: string;
+    currentPage?: number;
+    pageSize?: number;
+  }
+
+  type ClientInfo = {
+    clientId?: number;
+    clientName?: string;
+  }
+
+  type AddClientRequest = {
+    clientName: string;
+    creatorAccount?: string;
+  }
+
+  type UpdateClientRequest = {
+    clientId: number;
+    clientName: string;
+    modifierAccount?: string;
+  }
+
+  type ProjectsRequest = {
+    organizationId: number;
+    name?: string;
+    creatorName?: string;
+    onlyMe?: boolean;
+    current: number;
+    pageSize: number;
+  }
+
+  type ProjectInfo = {
+    id: number;
+    name: string;
+    creatorName: string;
+    modifyTime: Date;
+  }
+
+  type CreateProjectRequest = {
+    name: string;
+    organizationId: number;
+  }
+
+  type UpdateProjectRequest = {
+    id: number;
+    name: string;
+  }
+
+  type TcTreeNode = {
+    id: number;
+    parentId: number;
+    data: TreeNodeData;
+    children: TcTreeNode[];
+  }
+
+  type TreeNodeData = {
+    text: string;
+    generalization: string[];
+    tag: string[];
+    expand: boolean;
+    isActive: boolean;
+    uid: string;
+  }
 }

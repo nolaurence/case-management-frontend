@@ -1,0 +1,36 @@
+.scaleContainer {
+  display: flex;
+  align-items: center;
+
+  &.isDark {
+    .btn {
+      color: hsla(0, 0%, 100%, 0.6);
+    }
+
+    .scaleInfo {
+      color: hsla(0, 0%, 100%, 0.6);
+
+      input {
+        color: hsla(0, 0%, 100%, 0.6);
+      }
+    }
+  }
+
+  .btn {
+    cursor: pointer;
+  }
+
+  .scaleInfo {
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 35px;
+      text-align: center;
+      background-color: transparent;
+      border: none;
+      outline: none;
+    }
+  }
+}
